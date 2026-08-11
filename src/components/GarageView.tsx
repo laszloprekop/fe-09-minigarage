@@ -93,7 +93,7 @@ export function GarageView({ plan, cars, hoveredId, onHover }: Props) {
           return (
             <image
               key={car.id}
-              href={sprite.file}
+              href={`${import.meta.env.BASE_URL}${sprite.file}`}
               x={box.x + sprite.dx}
               y={box.y + sprite.dy}
               width={sprite.w}

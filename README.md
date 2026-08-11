@@ -1,6 +1,8 @@
 # MiniGarage
 
-![](assets/hero.png)
+**[Live demo →](https://laszloprekop.github.io/fe-09-minigarage/)**
+
+[![](assets/hero.png)](https://laszloprekop.github.io/fe-09-minigarage/)
 
 A digital vehicle catalogue: park vehicles into a garage and watch them appear both as a list
 and as an isometric plan of the lot.
@@ -34,7 +36,11 @@ npm install
 npm run dev      # development server
 npm test         # unit tests
 npm run build    # production build
+npm run preview  # serve the production build under its deploy subpath
 ```
+
+Every push to `main` builds, runs the tests, and deploys to GitHub Pages
+([workflow](.github/workflows/deploy.yml)).
 
 ## How it is put together
 
