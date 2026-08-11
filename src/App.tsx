@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GarageHeader } from './components/GarageHeader';
 import { GarageView } from './components/GarageView';
 import { ParkingForm } from './components/ParkingForm';
 import { VehicleList } from './components/VehicleList';
@@ -49,7 +50,6 @@ export default function App() {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   const free = freeBays(plan, cars.map((car) => car.bayId));
-  const freeBusBays = free.filter((bay) => bay.length >= 9).length;
 
   const handleAddCar = () => {
     const trimmedReg = regNumber.trim();
@@ -115,19 +115,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-surface-300 px-6 py-12 text-ink-900">
-      <div className="mx-auto max-w-3xl space-y-14">
-        <header className="text-center">
-          <h1 className="text-3xl font-semibold tracking-tight">Minigaraget</h1>
-          <p className="mt-3 text-ink-700">
-            Antal bilar i garaget:{' '}
-            <span className="font-semibold text-ink-950">{cars.length}</span>
-          </p>
-          <p className="mt-1 text-sm text-ink-700">
-            {free.length === 1 ? '1 ledig plats' : `${free.length} lediga platser`}
-            {', varav '}
-            {freeBusBays === 1 ? '1 bussplats' : `${freeBusBays} bussplatser`}
-          </p>
-        </header>
+      <div className="mx-auto max-w-5xl space-y-14">
+        <GarageHeader plan={plan} parked={cars.length} free={free} />
 
         <GarageView
           plan={plan}

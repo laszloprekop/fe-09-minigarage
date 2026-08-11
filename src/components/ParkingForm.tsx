@@ -14,10 +14,14 @@ interface Props {
   onSubmit: () => void;
 }
 
-/** Fields are bays too: a white outline on the ground, never a filled box. */
+/**
+ * Fields are the one place a fill is allowed: a light panel, no border, so an
+ * editable field never reads as one of the outlined bays around it.
+ */
 const fieldClasses =
-  'w-full border-2 border-white bg-transparent px-4 py-2.5 text-ink-900 ' +
-  'placeholder:text-surface-600 focus:border-accent-strong focus:outline-none';
+  'w-full border-0 bg-surface-100 px-4 py-2.5 text-ink-900 ' +
+  'placeholder:text-surface-600 focus:bg-surface-50 focus:outline-2 ' +
+  'focus:-outline-offset-2 focus:outline-accent-strong';
 
 const labelClasses =
   'mb-2 block text-xs font-semibold tracking-wider text-ink-700 uppercase';

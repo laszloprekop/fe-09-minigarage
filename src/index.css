@@ -5,6 +5,8 @@
    what the illustrator did and what keeps the UI sitting comfortably next to
    the vehicles. */
 @theme {
+  --font-counter: 'Sixtyfour Variable', ui-monospace, monospace;
+
   --color-surface-50: oklch(0.985 0.004 232);
   --color-surface-100: oklch(0.963 0.008 232);
   --color-surface-200: oklch(0.917 0.017 231);
