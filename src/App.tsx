@@ -50,7 +50,10 @@ export default function App() {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  const free = freeBays(plan, cars.map((car) => car.bayId));
+  const free = freeBays(
+    plan,
+    cars.map((car) => car.bayId),
+  );
 
   const handleAddCar = () => {
     const trimmedReg = regNumber.trim();
@@ -116,8 +119,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-300 text-ink-900">
-      <div className="sticky top-0 z-10 bg-surface-300 px-6 pt-6 pb-5">
+    <div className="min-h-screen bg-surround text-ink-900">
+      <div className="sticky top-0 z-10 bg-surround/60 px-6 pt-6 pb-5 backdrop-blur-md">
         <div className="mx-auto max-w-6xl">
           <GarageHeader plan={plan} parked={cars.length} free={free} />
         </div>
@@ -157,29 +160,35 @@ export default function App() {
             />
           </aside>
 
-          <div className="min-w-0 flex-1">
-            <GarageView
-              plan={plan}
-              cars={cars}
-              hoveredId={hoveredId}
-              selectedId={selectedId}
-              onHover={setHoveredId}
-              onSelect={setSelectedId}
+          <div className="relative min-w-0 flex-1">
+            <div
+              aria-hidden
+              className="lot-pool pointer-events-none absolute -inset-[40%]"
             />
+            <div className="relative">
+              <GarageView
+                plan={plan}
+                cars={cars}
+                hoveredId={hoveredId}
+                selectedId={selectedId}
+                onHover={setHoveredId}
+                onSelect={setSelectedId}
+              />
 
-            <p className="mt-4 text-[11px] tracking-wide text-ink-700">
-              Fordonsillustrationer av{' '}
-              <a
-                href="https://www.vecteezy.com/members/tartila-stock71065"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-2 transition-colors
+              <p className="mt-4 text-[11px] tracking-wide text-ink-700">
+                Fordonsillustrationer av{' '}
+                <a
+                  href="https://www.vecteezy.com/members/tartila-stock71065"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 transition-colors
                            hover:text-accent-strong"
-              >
-                Tetiana Lazunova
-              </a>{' '}
-              — Kyiv, Ukraina.
-            </p>
+                >
+                  Tetiana Lazunova
+                </a>{' '}
+                — Kyiv, Ukraina.
+              </p>
+            </div>
           </div>
         </div>
       </main>
