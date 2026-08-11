@@ -48,6 +48,7 @@ export default function App() {
   const [type, setType] = useState<VehicleTypeId>('sedan');
   const [error, setError] = useState('');
   const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const free = freeBays(plan, cars.map((car) => car.bayId));
 
@@ -111,6 +112,7 @@ export default function App() {
 
   const handleDeleteCar = (id: number) => {
     setCars((prev) => prev.filter((car) => car.id !== id));
+    setSelectedId((current) => (current === id ? null : current));
   };
 
   return (
@@ -148,7 +150,9 @@ export default function App() {
             <VehicleList
               cars={cars}
               hoveredId={hoveredId}
+              selectedId={selectedId}
               onHover={setHoveredId}
+              onSelect={setSelectedId}
               onDelete={handleDeleteCar}
             />
           </aside>
@@ -158,7 +162,9 @@ export default function App() {
               plan={plan}
               cars={cars}
               hoveredId={hoveredId}
+              selectedId={selectedId}
               onHover={setHoveredId}
+              onSelect={setSelectedId}
             />
           </div>
         </div>

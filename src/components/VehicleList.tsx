@@ -4,11 +4,20 @@ import { VehicleRow } from './VehicleRow';
 interface Props {
   cars: ICar[];
   hoveredId: number | null;
+  selectedId: number | null;
   onHover: (id: number | null) => void;
+  onSelect: (id: number | null) => void;
   onDelete: (id: number) => void;
 }
 
-export function VehicleList({ cars, hoveredId, onHover, onDelete }: Props) {
+export function VehicleList({
+  cars,
+  hoveredId,
+  selectedId,
+  onHover,
+  onSelect,
+  onDelete,
+}: Props) {
   return (
     <section>
       <h2 className="mb-6 text-lg font-semibold tracking-tight">Parkerade fordon</h2>
@@ -22,7 +31,9 @@ export function VehicleList({ cars, hoveredId, onHover, onDelete }: Props) {
               key={car.id}
               car={car}
               hovered={car.id === hoveredId}
+              selected={car.id === selectedId}
               onHover={onHover}
+              onSelect={onSelect}
               onDelete={onDelete}
             />
           ))}
