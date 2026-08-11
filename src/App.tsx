@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { GarageView } from './components/GarageView';
 import { ParkingForm } from './components/ParkingForm';
 import { VehicleList } from './components/VehicleList';
-import { PLAN_SMALL } from './data/plans';
+import { PLANS } from './data/plans';
 import { typeById } from './data/vehicleTypes';
 import { generateVehicle } from './domain/generator';
 import { findBay, freeBays } from './domain/parking';
@@ -37,8 +37,10 @@ const rollFacing = (facings: Facing[]): Facing =>
   facings[Math.floor(Math.random() * facings.length)];
 
 export default function App() {
-  const plan = PLAN_SMALL;
-
+  // Lazy initialisers: rolled once per session. In the component body these
+  // would re-roll on every render and the garage would reshuffle on every
+  // keystroke. StrictMode calls them twice in development and keeps one result.
+  const [plan] = useState(() => PLANS[Math.floor(Math.random() * PLANS.length)]);
   const [cars, setCars] = useState<ICar[]>(() => seedGarage(plan));
   const [regNumber, setRegNumber] = useState('');
   const [brand, setBrand] = useState('');
