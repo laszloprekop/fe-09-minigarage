@@ -1,6 +1,6 @@
-import { MAX_OVERHANG } from '../data/sprites.generated';
-import { bayCorners } from '../domain/iso';
-import type { Plan } from '../domain/types';
+import { MAX_OVERHANG, SPRITES } from '../data/sprites.generated';
+import { bayBox, bayCorners, depthOf } from '../domain/iso';
+import type { Bay, ICar, Plan } from '../domain/types';
 
 /** Breathing room around the lot, in the same px units as the grid. */
 const PAD = 40;
@@ -23,11 +23,34 @@ function lotViewBox(plan: Plan): string {
   return `${minX} ${minY} ${maxX - minX} ${maxY - minY}`;
 }
 
-interface Props {
-  plan: Plan;
+interface Placed {
+  car: ICar;
+  bay: Bay;
 }
 
-export function GarageView({ plan }: Props) {
+/**
+ * Vehicles paired with their bays, ordered back to front. Painting in this
+ * order lets a nearer vehicle cover a more distant one — without it, a bus in
+ * a far bay draws over the car in front of it, and only sometimes, depending
+ * on the order things were parked.
+ */
+function placeVehicles(plan: Plan, cars: ICar[]): Placed[] {
+  const byId = new Map(plan.bays.map((bay) => [bay.id, bay]));
+
+  return cars
+    .flatMap((car) => {
+      const bay = byId.get(car.bayId);
+      return bay ? [{ car, bay }] : [];
+    })
+    .sort((a, b) => depthOf(a.bay) - depthOf(b.bay));
+}
+
+interface Props {
+  plan: Plan;
+  cars: ICar[];
+}
+
+export function GarageView({ plan, cars }: Props) {
   return (
     <svg
       viewBox={lotViewBox(plan)}
@@ -45,6 +68,28 @@ export function GarageView({ plan }: Props) {
               .join(' ')}
           />
         ))}
+      </g>
+
+      <g>
+        {placeVehicles(plan, cars).map(({ car, bay }) => {
+          const sprite = SPRITES[`${car.type}-${car.facing}`];
+          if (!sprite) return null;
+
+          // Offsets are measured from the bay's axis-aligned box, not from a
+          // corner of the parallelogram.
+          const box = bayBox(bay);
+
+          return (
+            <image
+              key={car.id}
+              href={sprite.file}
+              x={box.x + sprite.dx}
+              y={box.y + sprite.dy}
+              width={sprite.w}
+              height={sprite.h}
+            />
+          );
+        })}
       </g>
     </svg>
   );
