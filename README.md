@@ -62,6 +62,65 @@ the domain vocabulary in [`CONTEXT.md`](CONTEXT.md).
 The isometric vehicle illustrations are by **Tetiana Lazunova** of Kyiv, Ukraine —
 [vecteezy.com/members/tartila-stock71065](https://www.vecteezy.com/members/tartila-stock71065).
 
+## Q&A
+
+**Are the vehicles separable because they started as a 3D model? And how do they end up in the right place on screen?**
+
+It's not 3D, it's a vector stock illustration:
+[various isometric car logistic delivery vehicles](https://www.vecteezy.com/vector-art/46431172-various-isometric-car-logistic-delivery-vehicles-with-cargo-trailer-truck-van-car-and-motorcycle-for-transport-company-set-different-automobiles-for-personal-usage)
+by Tetiana Lazunova.
+
+I carefully grouped the vector shapes into "cars", fixed their blending modes, unified their
+colour palette, and placed them on an isometric grid in Affinity: 74 px cells, 30° angle.
+
+I also added the bay shapes below the cars, which I could then reuse to calculate the placement
+of a car relative to a generated iso-bay — a parking spot.
+
+Then a script exports the cars out of the master SVG, and those individual sprites are used to
+rebuild the scene later. The placement order matters, back to front — otherwise cars at the back
+float over the cars in front.
+
+The separated car designs live in [`public/vehicles`](public/vehicles), and the splitter script
+has to run again whenever the master SVG changes.
+
+The garage view is then reconstructed as an SVG in the page, from plan data objects — the garage
+layouts in [`src/data/plans.ts`](src/data/plans.ts).
+
+Placing the sprites is just a loop over a 2D matrix. It is only the illusion of a 3D space; the
+paint order fakes the depth.
+
+### Where that lives in the code
+
+| File | Job |
+|---|---|
+| [`tools/extract-vehicles.mjs`](tools/extract-vehicles.mjs) | splits the master, records each sprite's offset from its bay |
+| [`src/data/sprites.generated.ts`](src/data/sprites.generated.ts) | the generated offsets — never edited by hand |
+| [`src/domain/iso.ts`](src/domain/iso.ts) | grid units → screen pixels, and the depth order |
+| [`src/data/plans.ts`](src/data/plans.ts) | the garage layouts, in whole grid units |
+| [`src/domain/parking.ts`](src/domain/parking.ts) | picks which bay a vehicle gets |
+| [`src/components/GarageView.tsx`](src/components/GarageView.tsx) | draws the bays, then the vehicles |
+
+The isometric conversion is two constants and two lines:
+
+```ts
+export const ISO_X = 74 * Math.cos(Math.PI / 6); // 64.09
+export const ISO_Y = 74 * Math.sin(Math.PI / 6); // 37
+
+export function toScreen(along: number, across: number) {
+  return { x: (along + across) * ISO_X, y: (across - along) * ISO_Y };
+}
+```
+
+One step *along* a bay moves right and up, one step *across* moves right and down. That is the
+whole trick — no projection matrix anywhere.
+
+The offsets are not guessed either. Every vehicle already sits inside a bay in the master
+artwork, so the script measures the gap between the two bounding boxes and writes it down. A
+vehicle is then drawn at its bay's position plus that recorded offset, and `dy` comes out
+negative for all of them because a vehicle is taller than the ground it stands on.
+
+A car only stores which bay it is in. Everything visible is computed from that.
+
 ## Language rule
 
 English for everything a developer reads: identifiers, comments, commits, documentation.
