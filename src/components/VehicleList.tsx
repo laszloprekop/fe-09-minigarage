@@ -11,15 +11,10 @@ interface Props {
 export function VehicleList({ cars, hoveredId, onHover, onDelete }: Props) {
   return (
     <section>
-      <h2 className="mb-4 text-xl font-semibold">Parkerade fordon</h2>
+      <h2 className="mb-6 text-lg font-semibold tracking-tight">Parkerade fordon</h2>
 
       {cars.length === 0 ? (
-        <p
-          className="rounded-xl border border-surface-300 bg-surface-100 py-8 text-center
-                     text-ink-700"
-        >
-          Garaget är helt tomt.
-        </p>
+        <p className="py-10 text-center text-ink-700">Garaget är helt tomt.</p>
       ) : (
         <div className="space-y-3">
           {cars.map((car) => (

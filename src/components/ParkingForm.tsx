@@ -14,9 +14,13 @@ interface Props {
   onSubmit: () => void;
 }
 
-const inputClasses =
-  'w-full rounded-lg border border-surface-400 bg-white px-4 py-2 ' +
-  'text-ink-900 placeholder:text-surface-600 focus:border-accent focus:outline-none';
+/** Fields are bays too: a white outline on the ground, never a filled box. */
+const fieldClasses =
+  'w-full border-2 border-white bg-transparent px-4 py-2.5 text-ink-900 ' +
+  'placeholder:text-surface-600 focus:border-accent-strong focus:outline-none';
+
+const labelClasses =
+  'mb-2 block text-xs font-semibold tracking-wider text-ink-700 uppercase';
 
 export function ParkingForm({
   regNumber,
@@ -30,43 +34,34 @@ export function ParkingForm({
   onSubmit,
 }: Props) {
   return (
-    <section className="rounded-xl border border-surface-300 bg-surface-50 p-6 shadow-sm">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Parkera nytt fordon</h2>
+    <section>
+      <div className="mb-6 flex items-baseline justify-between">
+        <h2 className="text-lg font-semibold tracking-tight">Parkera nytt fordon</h2>
         <button
           type="button"
           onClick={onGenerate}
           title="Fyll i ett slumpat fordon"
           aria-label="Fyll i ett slumpat fordon"
-          className="flex cursor-pointer items-center gap-1.5 rounded-lg border
-                     border-accent/30 bg-accent-soft px-3 py-1.5 text-sm font-medium
-                     text-accent-strong transition-colors hover:bg-accent hover:text-white"
+          className="cursor-pointer border-2 border-white bg-surface-200 px-3 py-1.5
+                     text-xs font-semibold tracking-wider text-ink-800 uppercase
+                     transition-colors hover:bg-surface-100"
         >
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
-            <path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h4.2a2 2 0 0 1 1.9 1.5L16 11h.5a1.5
-                     1.5 0 0 1 1.5 1.5V17h-2v-1.5H5V17H3v-4.5A1.5 1.5 0 0 1 4.5 11H5Zm2.1
-                     0h6.8l-1-3H8.1l-1 3ZM6 14.5h2V13H6v1.5Zm7 0h2V13h-2v1.5Z" />
-            <path d="M19 5h1.5v2H22v1.5h-1.5V10H19V8.5h-1.5V7H19V5Z" />
-          </svg>
           Slumpa
         </button>
       </div>
 
       {error && (
-        <div
+        <p
           role="alert"
-          className="mb-4 rounded-lg border border-alert/40 bg-alert-soft p-3 text-sm text-alert"
+          className="mb-6 border-2 border-alert px-4 py-3 text-sm font-medium text-alert"
         >
           {error}
-        </div>
+        </p>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div>
-          <label
-            htmlFor="regNumber"
-            className="mb-1 block text-sm font-medium text-ink-800"
-          >
+          <label htmlFor="regNumber" className={labelClasses}>
             Regnummer
           </label>
           <input
@@ -75,12 +70,12 @@ export function ParkingForm({
             value={regNumber}
             onChange={(event) => onRegNumberChange(event.target.value.toUpperCase())}
             placeholder="t.ex. ABC123"
-            className={inputClasses}
+            className={`${fieldClasses} font-mono tracking-widest`}
           />
         </div>
 
         <div>
-          <label htmlFor="brand" className="mb-1 block text-sm font-medium text-ink-800">
+          <label htmlFor="brand" className={labelClasses}>
             Märke
           </label>
           <input
@@ -90,7 +85,7 @@ export function ParkingForm({
             onChange={(event) => onBrandChange(event.target.value)}
             placeholder="t.ex. Volvo"
             list="brands"
-            className={inputClasses}
+            className={fieldClasses}
           />
           <datalist id="brands">
             {ALL_BRANDS.map((name) => (
@@ -100,14 +95,14 @@ export function ParkingForm({
         </div>
 
         <div>
-          <label htmlFor="type" className="mb-1 block text-sm font-medium text-ink-800">
+          <label htmlFor="type" className={labelClasses}>
             Fordonstyp
           </label>
           <select
             id="type"
             value={type}
             onChange={(event) => onTypeChange(event.target.value as VehicleTypeId)}
-            className={inputClasses}
+            className={fieldClasses}
           >
             {VEHICLE_TYPES.map((vehicleType) => (
               <option key={vehicleType.id} value={vehicleType.id}>
@@ -120,8 +115,9 @@ export function ParkingForm({
         <button
           type="button"
           onClick={onSubmit}
-          className="w-full cursor-pointer rounded-lg bg-accent-strong py-2.5 font-semibold
-                     text-white transition-colors hover:bg-accent"
+          className="w-full cursor-pointer border-2 border-accent-strong bg-accent-strong
+                     px-4 py-3 text-sm font-semibold tracking-wider text-white uppercase
+                     transition-colors hover:border-accent hover:bg-accent"
         >
           Parkera bil
         </button>

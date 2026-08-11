@@ -114,11 +114,11 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-200 p-8 text-ink-900">
-      <div className="mx-auto max-w-3xl space-y-8">
+    <div className="min-h-screen bg-surface-300 px-6 py-12 text-ink-900">
+      <div className="mx-auto max-w-3xl space-y-14">
         <header className="text-center">
-          <h1 className="mb-2 text-3xl font-semibold">Minigaraget</h1>
-          <p className="text-ink-700">
+          <h1 className="text-3xl font-semibold tracking-tight">Minigaraget</h1>
+          <p className="mt-3 text-ink-700">
             Antal bilar i garaget:{' '}
             <span className="font-semibold text-ink-950">{cars.length}</span>
           </p>

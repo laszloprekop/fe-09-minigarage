@@ -58,7 +58,7 @@ export function GarageView({ plan, cars, hoveredId, onHover }: Props) {
   return (
     <svg
       viewBox={lotViewBox(plan)}
-      className="w-full rounded-xl bg-surface-300"
+      className="w-full"
       role="img"
       aria-label="Garageplan"
     >

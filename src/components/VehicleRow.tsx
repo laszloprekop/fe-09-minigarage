@@ -1,3 +1,4 @@
+import { typeById } from '../data/vehicleTypes';
 import type { ICar } from '../domain/types';
 
 interface Props {
@@ -7,34 +8,33 @@ interface Props {
   onDelete: (id: number) => void;
 }
 
+/** A parked vehicle is drawn as a bay: white outline, no fill. */
 export function VehicleRow({ car, hovered, onHover, onDelete }: Props) {
   return (
     <div
       onMouseEnter={() => onHover(car.id)}
       onMouseLeave={() => onHover(null)}
-      className={`flex items-center justify-between rounded-xl border p-4 shadow-sm
+      className={`flex items-center justify-between gap-4 border-2 px-4 py-3
                   transition-colors ${
-                    hovered
-                      ? 'border-accent bg-accent-soft'
-                      : 'border-surface-300 bg-surface-50'
+                    hovered ? 'border-accent-strong' : 'border-white'
                   }`}
     >
-      <div className="flex items-center gap-3">
-        <span
-          className="rounded border border-accent/30 bg-accent-soft px-2.5 py-1 font-mono
-                     text-xs font-semibold uppercase text-accent-strong"
-        >
+      <div className="flex items-baseline gap-4">
+        <span className="font-mono text-sm font-semibold tracking-widest text-ink-950">
           {car.regNumber}
         </span>
-        <h3 className="text-lg font-bold">{car.brand}</h3>
+        <span className="font-semibold text-ink-900">{car.brand}</span>
+        <span className="text-xs tracking-wide text-ink-700">
+          {typeById(car.type).label}
+        </span>
       </div>
 
       <button
         type="button"
         onClick={() => onDelete(car.id)}
-        className="cursor-pointer rounded-lg border border-alert/30 bg-alert-soft px-4 py-2
-                   text-sm font-medium text-alert transition-colors hover:bg-alert
-                   hover:text-white"
+        className="cursor-pointer border-2 border-white bg-surface-200 px-3 py-1.5
+                   text-xs font-semibold tracking-wider text-ink-800 uppercase
+                   transition-colors hover:border-alert hover:text-alert"
       >
         Ta bort
       </button>
