@@ -56,4 +56,105 @@ const MAPPING = [
   ['bus-b-03-09', 'bus-b', 24],
 ];
 
-export { MAPPING, OUT_DIR, OUT_META, SRC };
+// ---------------------------------------------------------------- geometry --
+
+const IDENTITY = [1, 0, 0, 1, 0, 0];
+
+/** Compose two SVG matrices: apply `n` first, then `m`. */
+const mul = (m, n) => [
+  m[0] * n[0] + m[2] * n[1],
+  m[1] * n[0] + m[3] * n[1],
+  m[0] * n[2] + m[2] * n[3],
+  m[1] * n[2] + m[3] * n[3],
+  m[0] * n[4] + m[2] * n[5] + m[4],
+  m[1] * n[4] + m[3] * n[5] + m[5],
+];
+
+const apply = (m, x, y) => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]];
+
+const parseMatrix = (value) => (value ? value.match(/-?[\d.]+/g).map(Number) : IDENTITY);
+
+const emptyBox = () => ({
+  minX: Infinity,
+  minY: Infinity,
+  maxX: -Infinity,
+  maxY: -Infinity,
+});
+
+const grow = (box, x, y) => {
+  box.minX = Math.min(box.minX, x);
+  box.maxX = Math.max(box.maxX, x);
+  box.minY = Math.min(box.minY, y);
+  box.maxY = Math.max(box.maxY, y);
+};
+
+/**
+ * Union of every transformed coordinate below `node`.
+ *
+ * Pairing the numbers in a `d` attribute works only because this artwork uses
+ * no H, V or A commands — those take an odd number of arguments and would knock
+ * the x/y alternation out of step for the rest of the path, giving a bounding
+ * box that is wrong but still plausible. Re-check the command set before
+ * trusting this against a differently exported file.
+ *
+ * Bezier control points can sit outside the curve they describe, so the box is
+ * a slight over-estimate. That is harmless: the same box sets both the sprite's
+ * viewBox and its width and height, so the extra margin is transparent padding.
+ */
+function boundsOf(node, parent = IDENTITY, box = emptyBox()) {
+  const m = mul(parent, parseMatrix(node.getAttribute?.('transform')));
+
+  if (node.nodeName === 'path') {
+    const numbers = (node.getAttribute('d').match(/-?\d*\.?\d+/g) ?? []).map(Number);
+    for (let i = 0; i + 1 < numbers.length; i += 2) {
+      const [x, y] = apply(m, numbers[i], numbers[i + 1]);
+      grow(box, x, y);
+    }
+  }
+
+  if (node.nodeName === 'rect') {
+    const x = Number(node.getAttribute('x') ?? 0);
+    const y = Number(node.getAttribute('y') ?? 0);
+    const w = Number(node.getAttribute('width') ?? 0);
+    const h = Number(node.getAttribute('height') ?? 0);
+    for (const [cx, cy] of [
+      [x, y],
+      [x + w, y],
+      [x + w, y + h],
+      [x, y + h],
+    ]) {
+      grow(box, ...apply(m, cx, cy));
+    }
+  }
+
+  for (let child = node.firstChild; child; child = child.nextSibling) {
+    if (child.nodeType === 1) boundsOf(child, m, box);
+  }
+
+  return box;
+}
+
+/** Element children of a node, skipping whitespace text nodes. */
+const elementsOf = (node) => {
+  const out = [];
+  for (let child = node.firstChild; child; child = child.nextSibling) {
+    if (child.nodeType === 1) out.push(child);
+  }
+  return out;
+};
+
+const findById = (nodes, id) => nodes.find((node) => node.getAttribute('id') === id);
+
+export {
+  apply,
+  boundsOf,
+  elementsOf,
+  findById,
+  IDENTITY,
+  MAPPING,
+  mul,
+  OUT_DIR,
+  OUT_META,
+  parseMatrix,
+  SRC,
+};
