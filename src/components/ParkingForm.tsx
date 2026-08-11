@@ -1,9 +1,14 @@
+import { VEHICLE_TYPES } from '../data/vehicleTypes';
+import type { VehicleTypeId } from '../domain/types';
+
 interface Props {
   regNumber: string;
   brand: string;
+  type: VehicleTypeId;
   error: string;
   onRegNumberChange: (value: string) => void;
   onBrandChange: (value: string) => void;
+  onTypeChange: (value: VehicleTypeId) => void;
   onSubmit: () => void;
 }
 
@@ -14,9 +19,11 @@ const inputClasses =
 export function ParkingForm({
   regNumber,
   brand,
+  type,
   error,
   onRegNumberChange,
   onBrandChange,
+  onTypeChange,
   onSubmit,
 }: Props) {
   return (
@@ -62,6 +69,24 @@ export function ParkingForm({
             placeholder="t.ex. Volvo"
             className={inputClasses}
           />
+        </div>
+
+        <div>
+          <label htmlFor="type" className="mb-1 block text-sm font-medium text-ink-800">
+            Fordonstyp
+          </label>
+          <select
+            id="type"
+            value={type}
+            onChange={(event) => onTypeChange(event.target.value as VehicleTypeId)}
+            className={inputClasses}
+          >
+            {VEHICLE_TYPES.map((vehicleType) => (
+              <option key={vehicleType.id} value={vehicleType.id}>
+                {vehicleType.label}
+              </option>
+            ))}
+          </select>
         </div>
 
         <button
