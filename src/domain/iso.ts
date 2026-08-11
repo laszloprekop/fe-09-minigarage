@@ -1,4 +1,4 @@
-import type { Bay } from './types';
+import type { Bay, Footprint } from './types';
 
 /**
  * The lot is a flat grid drawn at an angle. One step *along* a bay moves right
@@ -47,6 +47,19 @@ export function bayBox(bay: Bay): { x: number; y: number; width: number; height:
   const x = Math.min(...xs);
   const y = Math.min(...ys);
   return { x, y, width: Math.max(...xs) - x, height: Math.max(...ys) - y };
+}
+
+/**
+ * Where a vehicle actually stands inside a bay.
+ *
+ * Sprite offsets were harvested against a bay of the vehicle's own footprint —
+ * in the master artwork every vehicle sits in a bay that exactly fits it. A bay's
+ * box grows *upward* with its length, so anchoring a 6-unit car to a 12-unit bus
+ * bay would draw it 222 px too high. Anchor to a box of the vehicle's own length
+ * at the same origin instead, which parks it at the near end of the bay.
+ */
+export function parkingBox(bay: Bay, footprint: Footprint) {
+  return bayBox({ ...bay, length: footprint });
 }
 
 /**

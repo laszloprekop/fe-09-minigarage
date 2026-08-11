@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bayBox, bayCorners, depthOf, ISO_X, ISO_Y, toScreen } from './iso';
+import { bayBox, bayCorners, depthOf, ISO_X, ISO_Y, parkingBox, toScreen } from './iso';
 import type { Bay } from './types';
 
 const bay = (over: Partial<Bay> = {}): Bay => ({
@@ -62,5 +62,32 @@ describe('depthOf', () => {
 
   it('counts a bay further as it moves along', () => {
     expect(depthOf(bay({ along: 8 }))).toBeLessThan(depthOf(bay({ along: 0 })));
+  });
+});
+
+describe('parkingBox', () => {
+  const at = (length: Bay['length']): Bay => ({
+    id: 'x',
+    along: 0,
+    across: 15,
+    length,
+  });
+
+  it('anchors a vehicle to a box its own size, not the bay it sits in', () => {
+    const inOwnBay = bayBox(at(6));
+    const spilledIntoBusBay = parkingBox(at(9), 6);
+    const spilledIntoCoachBay = parkingBox(at(12), 6);
+
+    expect(spilledIntoBusBay).toEqual(inOwnBay);
+    expect(spilledIntoCoachBay).toEqual(inOwnBay);
+  });
+
+  it('leaves a vehicle that exactly fills its bay untouched', () => {
+    expect(parkingBox(at(12), 12)).toEqual(bayBox(at(12)));
+  });
+
+  it('would otherwise drift upward by three units per extra three of bay', () => {
+    // The bug this guards: a bay's box grows upward as it gets longer.
+    expect(bayBox(at(6)).y - bayBox(at(12)).y).toBeCloseTo(222, 0);
   });
 });

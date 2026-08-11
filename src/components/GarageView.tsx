@@ -1,5 +1,6 @@
 import { MAX_OVERHANG, SPRITES } from '../data/sprites.generated';
-import { bayBox, bayCorners, depthOf } from '../domain/iso';
+import { typeById } from '../data/vehicleTypes';
+import { bayCorners, depthOf, parkingBox } from '../domain/iso';
 import type { Bay, ICar, Plan } from '../domain/types';
 
 /** Breathing room around the lot, in the same px units as the grid. */
@@ -164,9 +165,10 @@ export function GarageView({
           const sprite = SPRITES[`${car.type}-${car.facing}`];
           if (!sprite) return null;
 
-          // Offsets are measured from the bay's axis-aligned box, not from a
-          // corner of the parallelogram.
-          const box = bayBox(bay);
+          // Offsets are measured from the axis-aligned box of a bay the size of
+          // this vehicle — not of the bay it happens to occupy, which may be a
+          // longer bus bay it spilled into.
+          const box = parkingBox(bay, typeById(car.type).footprint);
 
           return (
             <image
