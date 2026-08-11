@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+/* Palette measured from the vehicle artwork and converted to OKLCH.
+   Hue rotates from 232 in the light surfaces to 289 in the darks, which is
+   what the illustrator did and what keeps the UI sitting comfortably next to
+   the vehicles. */
+@theme {
+  --color-surface-50: oklch(0.985 0.004 232);
+  --color-surface-100: oklch(0.963 0.008 232);
+  --color-surface-200: oklch(0.917 0.017 231);
+  --color-surface-300: oklch(0.895 0.017 228); /* the artboard ground */
+  --color-surface-400: oklch(0.849 0.027 232);
+  --color-surface-500: oklch(0.768 0.031 237);
+  --color-surface-600: oklch(0.666 0.032 233);
+
+  --color-ink-700: oklch(0.581 0.025 263);
+  --color-ink-800: oklch(0.325 0.036 265);
+  --color-ink-900: oklch(0.237 0.032 268);
+  --color-ink-950: oklch(0.156 0.019 289);
+
+  --color-accent: oklch(0.664 0.115 264); /* the headlight blue */
+  --color-accent-strong: oklch(0.55 0.14 264);
+  --color-accent-soft: oklch(0.94 0.03 264);
+
+  --color-alert: oklch(0.475 0.171 20); /* the taillight red */
+  --color-alert-soft: oklch(0.95 0.03 20);
+}
