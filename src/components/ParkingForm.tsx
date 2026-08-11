@@ -119,9 +119,9 @@ export function ParkingForm({
         <button
           type="button"
           onClick={onSubmit}
-          className="w-full cursor-pointer border-2 border-accent-strong bg-accent-strong
-                     px-4 py-3 text-sm font-semibold tracking-wider text-white uppercase
-                     transition-colors hover:border-accent hover:bg-accent"
+          className="w-full cursor-pointer border-2 border-ink-900 bg-ink-900 px-4 py-3
+                     text-sm font-semibold tracking-wider text-surface-50 uppercase
+                     transition-colors hover:border-ink-950 hover:bg-ink-950"
         >
           Parkera bil
         </button>
