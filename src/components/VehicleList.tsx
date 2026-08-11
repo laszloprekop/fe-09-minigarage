@@ -3,10 +3,12 @@ import { VehicleRow } from './VehicleRow';
 
 interface Props {
   cars: ICar[];
+  hoveredId: number | null;
+  onHover: (id: number | null) => void;
   onDelete: (id: number) => void;
 }
 
-export function VehicleList({ cars, onDelete }: Props) {
+export function VehicleList({ cars, hoveredId, onHover, onDelete }: Props) {
   return (
     <section>
       <h2 className="mb-4 text-xl font-semibold">Parkerade fordon</h2>
@@ -21,7 +23,13 @@ export function VehicleList({ cars, onDelete }: Props) {
       ) : (
         <div className="space-y-3">
           {cars.map((car) => (
-            <VehicleRow key={car.id} car={car} onDelete={onDelete} />
+            <VehicleRow
+              key={car.id}
+              car={car}
+              hovered={car.id === hoveredId}
+              onHover={onHover}
+              onDelete={onDelete}
+            />
           ))}
         </div>
       )}

@@ -44,6 +44,10 @@ export default function App() {
   const [brand, setBrand] = useState('');
   const [type, setType] = useState<VehicleTypeId>('sedan');
   const [error, setError] = useState('');
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
+
+  const free = freeBays(plan, cars.map((car) => car.bayId));
+  const freeBusBays = free.filter((bay) => bay.length >= 9).length;
 
   const handleAddCar = () => {
     const trimmedReg = regNumber.trim();
@@ -116,9 +120,19 @@ export default function App() {
             Antal bilar i garaget:{' '}
             <span className="font-semibold text-ink-950">{cars.length}</span>
           </p>
+          <p className="mt-1 text-sm text-ink-700">
+            {free.length === 1 ? '1 ledig plats' : `${free.length} lediga platser`}
+            {', varav '}
+            {freeBusBays === 1 ? '1 bussplats' : `${freeBusBays} bussplatser`}
+          </p>
         </header>
 
-        <GarageView plan={plan} cars={cars} />
+        <GarageView
+          plan={plan}
+          cars={cars}
+          hoveredId={hoveredId}
+          onHover={setHoveredId}
+        />
 
         <ParkingForm
           regNumber={regNumber}
@@ -141,7 +155,12 @@ export default function App() {
           onSubmit={handleAddCar}
         />
 
-        <VehicleList cars={cars} onDelete={handleDeleteCar} />
+        <VehicleList
+          cars={cars}
+          hoveredId={hoveredId}
+          onHover={setHoveredId}
+          onDelete={handleDeleteCar}
+        />
       </div>
     </div>
   );

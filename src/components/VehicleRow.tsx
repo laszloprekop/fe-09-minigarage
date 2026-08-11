@@ -2,14 +2,22 @@ import type { ICar } from '../domain/types';
 
 interface Props {
   car: ICar;
+  hovered: boolean;
+  onHover: (id: number | null) => void;
   onDelete: (id: number) => void;
 }
 
-export function VehicleRow({ car, onDelete }: Props) {
+export function VehicleRow({ car, hovered, onHover, onDelete }: Props) {
   return (
     <div
-      className="flex items-center justify-between rounded-xl border border-surface-300
-                 bg-surface-50 p-4 shadow-sm"
+      onMouseEnter={() => onHover(car.id)}
+      onMouseLeave={() => onHover(null)}
+      className={`flex items-center justify-between rounded-xl border p-4 shadow-sm
+                  transition-colors ${
+                    hovered
+                      ? 'border-accent bg-accent-soft'
+                      : 'border-surface-300 bg-surface-50'
+                  }`}
     >
       <div className="flex items-center gap-3">
         <span

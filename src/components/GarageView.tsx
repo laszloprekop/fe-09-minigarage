@@ -48,9 +48,13 @@ function placeVehicles(plan: Plan, cars: ICar[]): Placed[] {
 interface Props {
   plan: Plan;
   cars: ICar[];
+  hoveredId: number | null;
+  onHover: (id: number | null) => void;
 }
 
-export function GarageView({ plan, cars }: Props) {
+export function GarageView({ plan, cars, hoveredId, onHover }: Props) {
+  const hoveredBayId = cars.find((car) => car.id === hoveredId)?.bayId;
+
   return (
     <svg
       viewBox={lotViewBox(plan)}
@@ -59,15 +63,22 @@ export function GarageView({ plan, cars }: Props) {
       aria-label="Garageplan"
     >
       {/* Bay markings are paint on the ground: one pass, before any vehicle. */}
-      <g fill="none" stroke="white" strokeWidth={5} strokeLinejoin="round">
-        {plan.bays.map((bay) => (
-          <polygon
-            key={bay.id}
-            points={bayCorners(bay)
-              .map((point) => `${point.x},${point.y}`)
-              .join(' ')}
-          />
-        ))}
+      <g strokeLinejoin="round">
+        {plan.bays.map((bay) => {
+          const lit = bay.id === hoveredBayId;
+          return (
+            <polygon
+              key={bay.id}
+              points={bayCorners(bay)
+                .map((point) => `${point.x},${point.y}`)
+                .join(' ')}
+              fill={lit ? 'var(--color-accent)' : 'none'}
+              fillOpacity={lit ? 0.22 : 0}
+              stroke={lit ? 'var(--color-accent-strong)' : 'white'}
+              strokeWidth={lit ? 10 : 5}
+            />
+          );
+        })}
       </g>
 
       <g>
@@ -87,7 +98,14 @@ export function GarageView({ plan, cars }: Props) {
               y={box.y + sprite.dy}
               width={sprite.w}
               height={sprite.h}
-            />
+              className="cursor-pointer"
+              onMouseEnter={() => onHover(car.id)}
+              onMouseLeave={() => onHover(null)}
+            >
+              <title>
+                {car.regNumber} {car.brand}
+              </title>
+            </image>
           );
         })}
       </g>
