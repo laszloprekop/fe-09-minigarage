@@ -109,7 +109,7 @@ export default function App() {
           </p>
         </header>
 
-        <GarageView />
+        <GarageView plan={plan} />
 
         <ParkingForm
           regNumber={regNumber}
