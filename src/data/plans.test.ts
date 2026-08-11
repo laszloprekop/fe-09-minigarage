@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Bay } from '../domain/types';
-import { PLANS } from './plans';
+import { LANE, PLANS } from './plans';
 
 /** Two bays clash if they overlap on both axes. Bays are always 3 units wide. */
 const clash = (a: Bay, b: Bay) =>
@@ -36,6 +36,20 @@ describe.each(PLANS.map((plan) => [plan.name, plan] as const))('%s', (_name, pla
 
   it('can take a coach — every plan needs one 12-bay', () => {
     expect(plan.bays.some((bay) => bay.length === 12)).toBe(true);
+  });
+
+  it('leaves a full lane between bays that face each other', () => {
+    const tooClose = plan.bays.flatMap((a, i) =>
+      plan.bays.slice(i + 1).flatMap((b) => {
+        // Only bays sharing an across range face each other down a lane.
+        const sharesAcross = a.across < b.across + 3 && b.across < a.across + 3;
+        if (!sharesAcross) return [];
+        const [front, back] = a.along <= b.along ? [a, b] : [b, a];
+        const gap = back.along - (front.along + front.length);
+        return gap > 0 && gap < LANE ? [`${a.id}/${b.id} gap ${gap}`] : [];
+      }),
+    );
+    expect(tooClose).toEqual([]);
   });
 });
 
