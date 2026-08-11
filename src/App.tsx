@@ -166,6 +166,20 @@ export default function App() {
               onHover={setHoveredId}
               onSelect={setSelectedId}
             />
+
+            <p className="mt-4 text-[11px] tracking-wide text-ink-700">
+              Fordonsillustrationer av{' '}
+              <a
+                href="https://www.vecteezy.com/members/tartila-stock71065"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 transition-colors
+                           hover:text-accent-strong"
+              >
+                Tetiana Lazunova
+              </a>{' '}
+              — Kyiv, Ukraina.
+            </p>
           </div>
         </div>
       </main>

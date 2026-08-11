@@ -57,6 +57,11 @@ Every push to `main` builds, runs the tests, and deploys to GitHub Pages
 Design decisions that would otherwise be puzzling are recorded in [`docs/adr/`](docs/adr), and
 the domain vocabulary in [`CONTEXT.md`](CONTEXT.md).
 
+## Credits
+
+The isometric vehicle illustrations are by **Tetiana Lazunova** of Kyiv, Ukraine —
+[vecteezy.com/members/tartila-stock71065](https://www.vecteezy.com/members/tartila-stock71065).
+
 ## Language rule
 
 English for everything a developer reads: identifiers, comments, commits, documentation.
