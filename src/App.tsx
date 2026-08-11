@@ -4,6 +4,7 @@ import { ParkingForm } from './components/ParkingForm';
 import { VehicleList } from './components/VehicleList';
 import { PLAN_SMALL } from './data/plans';
 import { typeById } from './data/vehicleTypes';
+import { generateVehicle } from './domain/generator';
 import { findBay, freeBays } from './domain/parking';
 import type { Facing, ICar, Plan, VehicleTypeId } from './domain/types';
 import { isValidRegNumber } from './domain/validation';
@@ -94,6 +95,14 @@ export default function App() {
     setBrand('');
   };
 
+  const handleGenerate = () => {
+    const suggestion = generateVehicle(cars.map((car) => car.regNumber));
+    setRegNumber(suggestion.regNumber);
+    setBrand(suggestion.brand);
+    setType(suggestion.type);
+    setError('');
+  };
+
   const handleDeleteCar = (id: number) => {
     setCars((prev) => prev.filter((car) => car.id !== id));
   };
@@ -128,6 +137,7 @@ export default function App() {
             setType(value);
             setError('');
           }}
+          onGenerate={handleGenerate}
           onSubmit={handleAddCar}
         />
 
