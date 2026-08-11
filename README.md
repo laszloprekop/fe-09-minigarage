@@ -14,7 +14,9 @@ screen and its interface is Swedish; the code and documentation are English.
 - **Swedish plate validation** — `ABC123` or `ABC12A`, with lowercase input coerced to uppercase
 - **Real capacity.** Every garage plan has a fixed set of bays in three lengths. A vehicle takes
   the smallest free bay it fits in, so a bus can be turned away even while car bays sit empty
-- **Isometric view** of the lot, drawn from the same array that renders the list
+- **A garage per session.** One of five hand-authored plans is picked at random on load
+- **Isometric view** of the lot, drawn from the same array that renders the list, with hover
+  linking a row to its bay in both directions
 
 ## Stack
 
@@ -23,12 +25,7 @@ screen and its interface is Swedish; the code and documentation are English.
 | Framework | React 19 + TypeScript |
 | Build | Vite |
 | Styling | Tailwind CSS v4, with a palette derived from the artwork in OKLCH |
-| Tests | Vitest, over the pure functions in `src/domain/` |
-
-## Status
-
-Design is settled and written down. Implementation has not started — the repository currently
-holds the artwork, the domain glossary and the planning material.
+| Tests | Vitest — 77 tests over the pure functions in `src/domain/` |
 
 ## Getting started
 
@@ -39,12 +36,20 @@ npm test         # unit tests
 npm run build    # production build
 ```
 
-## Artwork
+## How it is put together
 
-The vehicles are isometric illustrations cut out of a shared source file
-(`materials/isometric_vehicles/`) by a script in `tools/`, together with the geometry needed to
-place each one correctly in its bay. The output is committed — the script is run by hand, not on
-every build.
+- **`src/App.tsx`** owns all state. Adding, removing, counting and rendering the list all happen
+  here, in one file.
+- **`src/domain/`** is pure: plate validation, best-fit bay assignment, the isometric grid
+  conversion, and the random vehicle generator. No React, no state, all tested.
+- **`src/data/`** holds the vehicle catalogue, the brand table, the garage plans, and the
+  generated sprite geometry.
+- **`tools/extract-vehicles.mjs`** cuts the 19 vehicle sprites out of a single source artboard
+  (`materials/isometric_vehicles/`) and records where each one sits in its bay. It is run by
+  hand and its output is committed — the artwork changes about twice a decade.
+
+Design decisions that would otherwise be puzzling are recorded in [`docs/adr/`](docs/adr), and
+the domain vocabulary in [`CONTEXT.md`](CONTEXT.md).
 
 ## Language rule
 
