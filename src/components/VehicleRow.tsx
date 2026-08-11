@@ -18,7 +18,7 @@ export function VehicleRow({ car, hovered, onHover, onDelete }: Props) {
       onMouseEnter={() => onHover(car.id)}
       onMouseLeave={() => onHover(null)}
       className={`border-2 px-4 py-3 transition-colors ${
-        hovered ? 'border-accent-strong' : 'border-white'
+        hovered ? 'border-ink-900' : 'border-white'
       }`}
     >
       <div className="flex items-center justify-between gap-3">

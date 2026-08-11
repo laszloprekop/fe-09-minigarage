@@ -54,6 +54,11 @@ interface Props {
 
 export function GarageView({ plan, cars, hoveredId, onHover }: Props) {
   const hoveredBayId = cars.find((car) => car.id === hoveredId)?.bayId;
+  const hoveredBay = plan.bays.find((bay) => bay.id === hoveredBayId);
+  const points = (bay: Bay) =>
+    bayCorners(bay)
+      .map((point) => `${point.x},${point.y}`)
+      .join(' ');
 
   return (
     <svg
@@ -62,24 +67,37 @@ export function GarageView({ plan, cars, hoveredId, onHover }: Props) {
       role="img"
       aria-label="Garageplan"
     >
+      <defs>
+        {/* Two passes: a tight core and a wide halo. Literal colour rather than
+            a custom property — flood-color does not reliably resolve var(). */}
+        <filter id="bay-glow" x="-60%" y="-60%" width="220%" height="220%">
+          <feDropShadow dx="0" dy="0" stdDeviation="10" floodColor="#6f92da" floodOpacity="0.95" />
+          <feDropShadow dx="0" dy="0" stdDeviation="26" floodColor="#6f92da" floodOpacity="0.55" />
+        </filter>
+      </defs>
+
       {/* Bay markings are paint on the ground: one pass, before any vehicle. */}
-      <g strokeLinejoin="round">
-        {plan.bays.map((bay) => {
-          const lit = bay.id === hoveredBayId;
-          return (
-            <polygon
-              key={bay.id}
-              points={bayCorners(bay)
-                .map((point) => `${point.x},${point.y}`)
-                .join(' ')}
-              fill={lit ? 'var(--color-accent)' : 'none'}
-              fillOpacity={lit ? 0.22 : 0}
-              stroke={lit ? 'var(--color-accent-strong)' : 'white'}
-              strokeWidth={lit ? 10 : 5}
-            />
-          );
-        })}
+      <g fill="none" stroke="white" strokeWidth={5} strokeLinejoin="round">
+        {plan.bays
+          .filter((bay) => bay.id !== hoveredBayId)
+          .map((bay) => (
+            <polygon key={bay.id} points={points(bay)} />
+          ))}
       </g>
+
+      {/* Drawn after the others so its outline covers the boundary it shares
+          with the bay next door, rather than being half hidden under it. */}
+      {hoveredBay && (
+        <polygon
+          points={points(hoveredBay)}
+          fill="var(--color-ink-900)"
+          fillOpacity={0.14}
+          stroke="var(--color-ink-900)"
+          strokeWidth={9}
+          strokeLinejoin="round"
+          filter="url(#bay-glow)"
+        />
+      )}
 
       <g>
         {placeVehicles(plan, cars).map(({ car, bay }) => {
