@@ -121,8 +121,8 @@ export default function App() {
         </div>
       </div>
 
-      <main className="mx-auto max-w-6xl px-6 pb-20">
-        <div className="flex flex-col gap-12 lg:flex-row lg:items-start">
+      <main className="px-6 pb-20">
+        <div className="mx-auto flex max-w-6xl flex-col gap-12 lg:flex-row lg:items-start">
           <aside className="w-full space-y-12 lg:w-90 lg:shrink-0">
             <ParkingForm
               regNumber={regNumber}

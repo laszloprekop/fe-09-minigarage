@@ -34,7 +34,7 @@ export function GarageHeader({ plan, parked, free }: Props) {
       <div className="flex shrink-0 items-center gap-3">
         <span
           className="font-counter text-5xl leading-none text-ink-950"
-          style={{ fontVariationSettings: "'BLED' 0, 'SCAN' 60" }}
+          style={{ fontVariationSettings: "'BLED' 0, 'SCAN' 25" }}
         >
           {free.length}
         </span>
