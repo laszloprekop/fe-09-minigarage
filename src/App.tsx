@@ -114,45 +114,55 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-300 px-6 py-12 text-ink-900">
-      <div className="mx-auto max-w-5xl space-y-14">
-        <GarageHeader plan={plan} parked={cars.length} free={free} />
-
-        <GarageView
-          plan={plan}
-          cars={cars}
-          hoveredId={hoveredId}
-          onHover={setHoveredId}
-        />
-
-        <ParkingForm
-          regNumber={regNumber}
-          brand={brand}
-          type={type}
-          error={error}
-          onRegNumberChange={(value) => {
-            setRegNumber(value);
-            setError('');
-          }}
-          onBrandChange={(value) => {
-            setBrand(value);
-            setError('');
-          }}
-          onTypeChange={(value) => {
-            setType(value);
-            setError('');
-          }}
-          onGenerate={handleGenerate}
-          onSubmit={handleAddCar}
-        />
-
-        <VehicleList
-          cars={cars}
-          hoveredId={hoveredId}
-          onHover={setHoveredId}
-          onDelete={handleDeleteCar}
-        />
+    <div className="min-h-screen bg-surface-300 text-ink-900">
+      <div className="sticky top-0 z-10 bg-surface-300 px-6 pt-6 pb-5">
+        <div className="mx-auto max-w-6xl">
+          <GarageHeader plan={plan} parked={cars.length} free={free} />
+        </div>
       </div>
+
+      <main className="mx-auto max-w-6xl px-6 pb-20">
+        <div className="flex flex-col gap-12 lg:flex-row lg:items-start">
+          <aside className="w-full space-y-12 lg:w-90 lg:shrink-0">
+            <ParkingForm
+              regNumber={regNumber}
+              brand={brand}
+              type={type}
+              error={error}
+              onRegNumberChange={(value) => {
+                setRegNumber(value);
+                setError('');
+              }}
+              onBrandChange={(value) => {
+                setBrand(value);
+                setError('');
+              }}
+              onTypeChange={(value) => {
+                setType(value);
+                setError('');
+              }}
+              onGenerate={handleGenerate}
+              onSubmit={handleAddCar}
+            />
+
+            <VehicleList
+              cars={cars}
+              hoveredId={hoveredId}
+              onHover={setHoveredId}
+              onDelete={handleDeleteCar}
+            />
+          </aside>
+
+          <div className="min-w-0 flex-1">
+            <GarageView
+              plan={plan}
+              cars={cars}
+              hoveredId={hoveredId}
+              onHover={setHoveredId}
+            />
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
