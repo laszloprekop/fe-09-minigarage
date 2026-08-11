@@ -3,6 +3,7 @@ import { GarageView } from './components/GarageView';
 import { ParkingForm } from './components/ParkingForm';
 import { VehicleList } from './components/VehicleList';
 import type { ICar } from './domain/types';
+import { isValidRegNumber } from './domain/validation';
 
 const SEED: ICar[] = [
   { id: 1, regNumber: 'ABC123', brand: 'Volvo' },
@@ -21,6 +22,13 @@ export default function App() {
 
     if (!trimmedReg || !trimmedBrand) {
       setError('Fyll i både regnummer och märke.');
+      return;
+    }
+
+    if (!isValidRegNumber(trimmedReg)) {
+      setError(
+        `"${trimmedReg}" är inte ett giltigt regnummer. Använd ABC123 eller ABC12A.`,
+      );
       return;
     }
 
