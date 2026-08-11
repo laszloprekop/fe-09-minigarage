@@ -54,8 +54,8 @@ Every push to `main` builds, runs the tests, and deploys to GitHub Pages
   (`materials/isometric_vehicles/`) and records where each one sits in its bay. It is run by
   hand and its output is committed — the artwork changes about twice a decade.
 
-Design decisions that would otherwise be puzzling are recorded in [`docs/adr/`](docs/adr), and
-the domain vocabulary in [`CONTEXT.md`](CONTEXT.md).
+The domain vocabulary — what a *bay*, a *footprint* and a *plan* mean here — is in
+[`CONTEXT.md`](CONTEXT.md).
 
 ## Credits
 
